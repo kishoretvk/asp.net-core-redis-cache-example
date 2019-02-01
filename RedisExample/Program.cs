@@ -7,15 +7,25 @@ namespace RedisExample
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
+            try
+            {
 
-            host.Run();
+                var host = new WebHostBuilder()
+             .UseKestrel()
+             .UseContentRoot(Directory.GetCurrentDirectory())
+             .UseIISIntegration()
+             .UseStartup<Startup>()
+             .UseApplicationInsights()
+             .Build();
+
+                host.Run();
+            }
+            catch (System.Exception ex) 
+            {
+
+                throw ex; 
+            }
+
         }
     }
 }

@@ -16,32 +16,52 @@ namespace RedisExample
     {
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
+            try
+            {
+                  var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-        }
+      
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            }
 
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           // Add framework services.
-            services.AddMvc();
-            services.Configure<RedisConfiguration>(Configuration.GetSection("redis"));
-          
-            services.AddDistributedRedisCache(options =>
+            try
             {
-                options.InstanceName = Configuration.GetValue<string>("redis:name");
-                options.Configuration = Configuration.GetValue<string>("redis:host");
-            });
 
-            services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
-            services.AddSession();
-        }
+
+                // Add framework services.
+                services.AddMvc();
+                services.Configure<RedisConfiguration>(Configuration.GetSection("redis"));
+
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.InstanceName = Configuration.GetValue<string>("redis:name");
+                    options.Configuration = Configuration.GetValue<string>("redis:host");
+                });
+
+                services.AddSingleton<IRedisConnectionFactory, RedisConnectionFactory>();
+                services.AddSession();
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }     }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
